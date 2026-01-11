@@ -7,7 +7,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowRight, Sparkles, Shield, Zap } from "lucide-react";
 
 export default function SignInPage() {
@@ -148,21 +147,6 @@ export default function SignInPage() {
                 required
                 className="h-11"
               />
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="remember"
-                checked={formData.remember}
-                onCheckedChange={(checked) =>
-                  setFormData({ ...formData, remember: checked as boolean })
-                }
-              />
-              <label
-                htmlFor="remember"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                Remember me for 30 days
-              </label>
             </div>
 
             <Button type="submit" className="w-full h-12 text-base font-medium">
