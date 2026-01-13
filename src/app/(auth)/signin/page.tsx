@@ -1,11 +1,19 @@
 "use client";
 
-import type React from "react";
-
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowRight, Sparkles, Shield, Zap } from "lucide-react";
+import {
+  ArrowRight,
+  Sparkles,
+  Shield,
+  Zap,
+  Mail,
+  Eye,
+  EyeOff,
+} from "lucide-react";
 import * as z from "zod";
 import {
   Field,
@@ -15,8 +23,11 @@ import {
 } from "@/components/ui/field";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import { signIn } from "@/lib/auth-client";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
-const formSchema = z.object({
+const signInSchema = z.object({
   email: z.email({ message: "Invalid email address" }),
   password: z
     .string()
@@ -24,16 +35,39 @@ const formSchema = z.object({
 });
 
 export default function SignInPage() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const form = useForm<z.infer<typeof signInSchema>>({
+    resolver: zodResolver(signInSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  const onSubmit = async () => {
-    alert("Login Success!");
+  const onSubmit = async (data: z.infer<typeof signInSchema>) => {
+    await signIn.email(
+      {
+        email: data.email,
+        password: data.password,
+        callbackURL: "/dashboard",
+      },
+      {
+        onRequest: () => setIsLoading(true),
+        onResponse: () => setIsLoading(false),
+        onError: (ctx) => {
+          toast.error(ctx.error.message);
+        },
+        onSuccess: () => {
+          setIsLoading(false);
+          form.reset();
+          toast.success("Sign in successful");
+          router.push("/dashboard");
+        },
+      },
+    );
   };
 
   const features = [
@@ -132,15 +166,18 @@ export default function SignInPage() {
                         className="text-sm font-medium">
                         Email
                       </FieldLabel>
-                      <Input
-                        {...field}
-                        id="email"
-                        type="email"
-                        aria-invalid={fieldState.invalid}
-                        placeholder="john@mail.com"
-                        className="h-11"
-                        required
-                      />
+                      <div className="relative group">
+                        <Input
+                          {...field}
+                          id="email"
+                          type="email"
+                          className="pl-10 bg-background/50 border-border/50 backdrop-blur-sm transition-all duration-200 group-hover:border-border focus:border-primary focus:bg-background"
+                          aria-invalid={fieldState.invalid}
+                          placeholder="john@mail.com"
+                          required
+                        />
+                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      </div>
                       {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]} />
                       )}
@@ -160,15 +197,30 @@ export default function SignInPage() {
                         className="text-sm font-medium">
                         Password
                       </FieldLabel>
-                      <Input
-                        {...field}
-                        id="password"
-                        type="password"
-                        aria-invalid={fieldState.invalid}
-                        placeholder="••••••••"
-                        className="h-11"
-                        required
-                      />
+                      <div className="relative group">
+                        <Input
+                          {...field}
+                          id="password"
+                          type={showPassword ? "text" : "password"}
+                          className="pl-10 bg-background/50 border-border/50 backdrop-blur-sm transition-all duration-200 group-hover:border-border focus:border-primary focus:bg-background"
+                          aria-invalid={fieldState.invalid}
+                          placeholder="••••••••"
+                          required
+                        />
+                        <Shield className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="absolute right-0 top-1/2 -translate-y-1/2 px-3 hover:bg-transparent"
+                          onClick={() => setShowPassword(!showPassword)}>
+                          {showPassword ? (
+                            <EyeOff className="h-4 w-4 text-muted-foreground" />
+                          ) : (
+                            <Eye className="h-4 w-4 text-muted-foreground" />
+                          )}
+                        </Button>
+                      </div>
                       {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]} />
                       )}
@@ -179,9 +231,19 @@ export default function SignInPage() {
 
               <Button
                 type="submit"
-                className="w-full h-12 text-base font-medium">
-                Sign in
-                <ArrowRight className="ml-2 w-4 h-4" />
+                className="w-full h-10 text-base font-medium"
+                disabled={isLoading}>
+                {isLoading ? (
+                  <>
+                    <AiOutlineLoading3Quarters className="mr-2 h-4 w-4 animate-spin" />
+                    Signing you in...
+                  </>
+                ) : (
+                  <>
+                    Sign In
+                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </>
+                )}
               </Button>
 
               <div className="relative my-6">

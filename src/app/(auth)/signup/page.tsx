@@ -1,7 +1,5 @@
 "use client";
 
-import type React from "react";
-
 import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -14,6 +12,10 @@ import {
   Sparkles,
   Shield,
   Zap,
+  User,
+  Mail,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import * as z from "zod";
 import {
@@ -24,33 +26,66 @@ import {
 } from "@/components/ui/field";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { signUp } from "@/lib/auth-client";
+import { toast } from "sonner";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
-const formSchema = z.object({
-  firstName: z.string().min(1, { message: "First name is required" }),
-  lastName: z.string().min(1, { message: "Last name is required" }),
+const signUpSchema = z.object({
+  name: z.string().min(2, { message: "Name must be at least 2 characters" }),
   email: z.email({ message: "Invalid email address" }),
   password: z
     .string()
-    .min(8, { message: "Password must be at least 8 characters" }),
+    .min(8, { message: "Password must be at least 8 characters" })
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, {
+      message:
+        "Password must contain at least one uppercase letter, one lowercase letter, and one number",
+    }),
 });
 
 export default function SignUpPage() {
   const [userType, setUserType] = useState<"client" | "freelancer">(
     "freelancer",
   );
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const router = useRouter();
+
+  const form = useForm<z.infer<typeof signUpSchema>>({
+    resolver: zodResolver(signUpSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
+      name: "",
       email: "",
       password: "",
     },
   });
 
-  const onSubmit = async () => {
-    alert("Account created!");
+  const onSubmit = async (data: z.infer<typeof signUpSchema>) => {
+    await signUp.email({
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      callbackURL: "/dashboard",
+      fetchOptions: {
+        onRequest: () => {
+          setIsLoading(true);
+        },
+        onResponse: () => {
+          setIsLoading(false);
+        },
+        onError: (ctx) => {
+          console.log(ctx.error);
+          toast.error(ctx.error.message);
+        },
+        onSuccess: async () => {
+          setIsLoading(false);
+          form.reset();
+          toast.success("Account created successfully");
+          router.push("/dashboard");
+        },
+      },
+    });
   };
 
   const features = {
@@ -164,7 +199,7 @@ export default function SignUpPage() {
             value={userType}
             onValueChange={(v) => setUserType(v as "client" | "freelancer")}
             className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-8 h-12 p-1 bg-muted">
+            <TabsList className="grid w-full grid-cols-2 mb-4 h-10 p-1 bg-muted">
               <TabsTrigger
                 value="freelancer"
                 className="flex items-center gap-2 h-full rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm">
@@ -181,59 +216,34 @@ export default function SignUpPage() {
 
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
               <FieldGroup>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Controller
-                      name="firstName"
-                      control={form.control}
-                      render={({ field, fieldState }) => (
-                        <Field data-invalid={fieldState.invalid}>
-                          <FieldLabel
-                            htmlFor="firstName"
-                            className="text-sm font-medium">
-                            First name
-                          </FieldLabel>
+                <div className="space-y-2">
+                  <Controller
+                    name="name"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel
+                          htmlFor="name"
+                          className="text-sm font-medium">
+                          Name
+                        </FieldLabel>
+                        <div className="relative group">
                           <Input
                             {...field}
-                            id="firstName"
+                            id="name"
+                            className="pl-10 bg-background/50 border-border/50 backdrop-blur-sm transition-all duration-200 group-hover:border-border focus:border-primary focus:bg-background"
                             aria-invalid={fieldState.invalid}
                             placeholder="Johnny"
-                            className="h-11"
                             required
                           />
-                          {fieldState.invalid && (
-                            <FieldError errors={[fieldState.error]} />
-                          )}
-                        </Field>
-                      )}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Controller
-                      name="lastName"
-                      control={form.control}
-                      render={({ field, fieldState }) => (
-                        <Field data-invalid={fieldState.invalid}>
-                          <FieldLabel
-                            htmlFor="lastName"
-                            className="text-sm font-medium">
-                            Last name
-                          </FieldLabel>
-                          <Input
-                            {...field}
-                            id="lastName"
-                            aria-invalid={fieldState.invalid}
-                            placeholder="Doe"
-                            className="h-11"
-                            required
-                          />
-                          {fieldState.invalid && (
-                            <FieldError errors={[fieldState.error]} />
-                          )}
-                        </Field>
-                      )}
-                    />
-                  </div>
+                          <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        </div>
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
+                    )}
+                  />
                 </div>
 
                 <div className="space-y-2">
@@ -247,15 +257,18 @@ export default function SignUpPage() {
                           className="text-sm font-medium">
                           Email
                         </FieldLabel>
-                        <Input
-                          {...field}
-                          id="email"
-                          type="email"
-                          aria-invalid={fieldState.invalid}
-                          placeholder="john@mail.com"
-                          className="h-11"
-                          required
-                        />
+                        <div className="relative group">
+                          <Input
+                            {...field}
+                            id="email"
+                            type="email"
+                            className="pl-10 bg-background/50 border-border/50 backdrop-blur-sm transition-all duration-200 group-hover:border-border focus:border-primary focus:bg-background"
+                            aria-invalid={fieldState.invalid}
+                            placeholder="john@mail.com"
+                            required
+                          />
+                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        </div>
                         {fieldState.invalid && (
                           <FieldError errors={[fieldState.error]} />
                         )}
@@ -275,15 +288,30 @@ export default function SignUpPage() {
                           className="text-sm font-medium">
                           Password
                         </FieldLabel>
-                        <Input
-                          {...field}
-                          id="password"
-                          type="password"
-                          aria-invalid={fieldState.invalid}
-                          placeholder="••••••••"
-                          className="h-11"
-                          required
-                        />
+                        <div className="relative group">
+                          <Input
+                            {...field}
+                            id="password"
+                            type={showPassword ? "text" : "password"}
+                            className="pl-10 bg-background/50 border-border/50 backdrop-blur-sm transition-all duration-200 group-hover:border-border focus:border-primary focus:bg-background"
+                            aria-invalid={fieldState.invalid}
+                            placeholder="••••••••"
+                            required
+                          />
+                          <Shield className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className="absolute right-0 top-1/2 -translate-y-1/2 px-3 hover:bg-transparent"
+                            onClick={() => setShowPassword(!showPassword)}>
+                            {showPassword ? (
+                              <EyeOff className="h-4 w-4 text-muted-foreground" />
+                            ) : (
+                              <Eye className="h-4 w-4 text-muted-foreground" />
+                            )}
+                          </Button>
+                        </div>
                         {fieldState.invalid && (
                           <FieldError errors={[fieldState.error]} />
                         )}
@@ -294,9 +322,19 @@ export default function SignUpPage() {
 
                 <Button
                   type="submit"
-                  className="w-full h-12 text-base font-medium">
-                  Create account
-                  <ArrowRight className="ml-2 w-4 h-4" />
+                  className="w-full h-12 text-base font-medium"
+                  disabled={isLoading}>
+                  {isLoading ? (
+                    <>
+                      <AiOutlineLoading3Quarters className="mr-2 h-3 w-3 animate-spin" />
+                      Creating your account...
+                    </>
+                  ) : (
+                    <>
+                      Create Account
+                      <ArrowRight className="ml-2 w-4 h-4" />
+                    </>
+                  )}
                 </Button>
               </FieldGroup>
             </form>
