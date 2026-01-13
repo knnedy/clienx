@@ -1,7 +1,7 @@
 CREATE TYPE "public"."experience_level" AS ENUM('entry', 'intermediate', 'expert');--> statement-breakpoint
 CREATE TYPE "public"."project_status" AS ENUM('draft', 'open', 'in_progress', 'completed', 'cancelled', 'disputed');--> statement-breakpoint
 CREATE TYPE "public"."proposal_status" AS ENUM('pending', 'accepted', 'rejected', 'withdrawn');--> statement-breakpoint
-CREATE TYPE "public"."user_role" AS ENUM('freelancer', 'client', 'admin');--> statement-breakpoint
+CREATE TYPE "public"."user_role" AS ENUM('freelancer', 'employer', 'admin');--> statement-breakpoint
 CREATE TABLE "account" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"account_id" text NOT NULL,
@@ -173,7 +173,7 @@ CREATE TABLE "skills" (
 CREATE TABLE "users" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"email" text NOT NULL,
-	"role" "user_role" DEFAULT 'client' NOT NULL,
+	"role" "user_role" NOT NULL,
 	"name" text,
 	"email_verified" boolean DEFAULT false NOT NULL,
 	"is_active" boolean DEFAULT true,

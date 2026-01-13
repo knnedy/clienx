@@ -41,10 +41,11 @@ const signUpSchema = z.object({
       message:
         "Password must contain at least one uppercase letter, one lowercase letter, and one number",
     }),
+  role: z.enum(["employer", "freelancer"]),
 });
 
 export default function SignUpPage() {
-  const [userType, setUserType] = useState<"client" | "freelancer">(
+  const [userRole, setUserRole] = useState<"employer" | "freelancer">(
     "freelancer",
   );
   const [isLoading, setIsLoading] = useState(false);
@@ -58,6 +59,7 @@ export default function SignUpPage() {
       name: "",
       email: "",
       password: "",
+      role: "freelancer", // Add default role
     },
   });
 
@@ -66,6 +68,7 @@ export default function SignUpPage() {
       name: data.name,
       email: data.email,
       password: data.password,
+      role: userRole,
       callbackURL: "/dashboard",
       fetchOptions: {
         onRequest: () => {
@@ -106,7 +109,7 @@ export default function SignUpPage() {
         desc: "Connect with opportunities that match your skills",
       },
     ],
-    client: [
+    employer: [
       {
         icon: Sparkles,
         title: "Top-tier talent",
@@ -144,19 +147,19 @@ export default function SignUpPage() {
         <div className="relative z-10 space-y-8 max-w-md">
           <div>
             <h2 className="text-4xl font-bold tracking-tight leading-tight text-balance">
-              {userType === "freelancer"
+              {userRole === "freelancer"
                 ? "Your talent deserves recognition"
                 : "Find exceptional talent"}
             </h2>
             <p className="text-background/60 mt-4 text-lg">
-              {userType === "freelancer"
+              {userRole === "freelancer"
                 ? "Join thousands of professionals building their dream careers."
                 : "Access a global network of skilled professionals ready to bring your vision to life."}
             </p>
           </div>
 
           <div className="space-y-5">
-            {features[userType].map((feature, i) => (
+            {features[userRole].map((feature, i) => (
               <div key={i} className="flex items-start gap-4">
                 <div className="p-2.5 rounded-lg bg-background/10">
                   <feature.icon className="w-5 h-5" />
@@ -196,8 +199,8 @@ export default function SignUpPage() {
           </div>
 
           <Tabs
-            value={userType}
-            onValueChange={(v) => setUserType(v as "client" | "freelancer")}
+            value={userRole}
+            onValueChange={(v) => setUserRole(v as "employer" | "freelancer")}
             className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-4 h-10 p-1 bg-muted">
               <TabsTrigger
@@ -207,10 +210,10 @@ export default function SignUpPage() {
                 Freelancer
               </TabsTrigger>
               <TabsTrigger
-                value="client"
+                value="employer"
                 className="flex items-center gap-2 h-full rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm">
                 <Users className="w-4 h-4" />
-                Client
+                Employer
               </TabsTrigger>
             </TabsList>
 
