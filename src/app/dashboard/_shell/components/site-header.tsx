@@ -4,8 +4,22 @@ import { usePathname } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { usePageTitle } from "../providers/page-title-provider";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-export function SiteHeader() {
+type UserMode = "freelancer" | "employer";
+
+type SiteHeaderProps = {
+  userMode: UserMode;
+  onModeChange: (mode: UserMode) => void;
+};
+
+export function SiteHeader({ userMode, onModeChange }: SiteHeaderProps) {
   const pathname = usePathname();
   const { dynamicTitle } = usePageTitle();
 
@@ -35,6 +49,31 @@ export function SiteHeader() {
         />
         <h1 className="text-base font-medium">{currentPage}</h1>
       </div>
+      <Select
+        value={userMode}
+        onValueChange={(value) => onModeChange(value as UserMode)}>
+        <SelectTrigger className="w-auto px-4 border-border bg-secondary hover:bg-secondary/80 transition-colors">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent className="border-border">
+          <SelectItem value="freelancer">
+            <div className="flex flex-col gap-0.5">
+              <div className="font-semibold text-sm">Freelancer</div>
+              <div className="text-xs text-muted-foreground">
+                Find & build projects
+              </div>
+            </div>
+          </SelectItem>
+          <SelectItem value="employer">
+            <div className="flex flex-col gap-0.5">
+              <div className="font-semibold text-sm">Employer</div>
+              <div className="text-xs text-muted-foreground">
+                Post & manage jobs
+              </div>
+            </div>
+          </SelectItem>
+        </SelectContent>
+      </Select>
     </header>
   );
 }
