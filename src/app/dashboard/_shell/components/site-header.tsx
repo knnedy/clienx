@@ -5,12 +5,13 @@ import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { usePageTitle } from "../providers/page-title-provider";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { ChevronDown } from "lucide-react";
 
 type UserMode = "freelancer" | "employer";
 
@@ -40,40 +41,31 @@ export function SiteHeader({ userMode, onModeChange }: SiteHeaderProps) {
   const currentPage = getPageTitle(pathname);
 
   return (
-    <header className="group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 flex h-12 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear">
-      <div className="flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
+    <header className="flex h-16 shrink-0 items-center justify-between gap-2 border-b px-4">
+      <div className="flex items-center gap-2">
         <SidebarTrigger className="-ml-1" />
-        <Separator
-          orientation="vertical"
-          className="mx-2 data-[orientation=vertical]:h-4"
-        />
-        <h1 className="text-base font-medium">{currentPage}</h1>
+        <Separator orientation="vertical" className="mr-2 h-4" />
+        <h1 className="text-sm font-semibold">{currentPage}</h1>
       </div>
-      <Select
-        value={userMode}
-        onValueChange={(value) => onModeChange(value as UserMode)}>
-        <SelectTrigger className="w-auto px-4 border-border bg-secondary hover:bg-secondary/80 transition-colors">
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent className="border-border">
-          <SelectItem value="freelancer">
-            <div className="flex flex-col gap-0.5">
-              <div className="font-semibold text-sm">Freelancer</div>
-              <div className="text-xs text-muted-foreground">
-                Find & build projects
-              </div>
-            </div>
-          </SelectItem>
-          <SelectItem value="employer">
-            <div className="flex flex-col gap-0.5">
-              <div className="font-semibold text-sm">Employer</div>
-              <div className="text-xs text-muted-foreground">
-                Post & manage jobs
-              </div>
-            </div>
-          </SelectItem>
-        </SelectContent>
-      </Select>
+
+      <div className="flex items-center gap-2">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="gap-2 bg-transparent">
+              {userMode === "freelancer" ? "👨‍💻 Freelancer" : "👔 Employer"}
+              <ChevronDown className="h-4 w-4 opacity-50" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => onModeChange("freelancer")}>
+              👨‍💻 Freelancer Mode
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onModeChange("employer")}>
+              👔 Employer Mode
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </header>
   );
 }

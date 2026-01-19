@@ -1,29 +1,12 @@
-"use client";
-
-import { Button } from "@/components/ui/button";
-import { useSession, signOut } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
-
 export default function Dashboard() {
-  const session = useSession();
-  const router = useRouter();
   return (
     <>
-      {/* display session data */}
-      session: {JSON.stringify(session)}
-      <div>Dashboard</div>
-      <Button
-        onClick={() => {
-          signOut({
-            fetchOptions: {
-              onSuccess: () => {
-                router.replace("/signin");
-              },
-            },
-          });
-        }}>
-        Log Out
-      </Button>
+      <div className="rounded-lg border p-6">
+        <h1 className="text-3xl font-bold">Welcome to your Dashboard</h1>
+        <p className="mt-2 text-gray-600">
+          Select an option from the sidebar to get started.
+        </p>
+      </div>
     </>
   );
 }
