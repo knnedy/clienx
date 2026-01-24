@@ -1,23 +1,24 @@
 "use client";
 
+import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { useUserMode } from "../../providers/user-mode-provider";
+import { usePathname } from "next/navigation";
 
 interface NavItemProps {
   icon: LucideIcon;
   label: string;
-  badge?: string | null;
-  isActive?: boolean;
+  href: string;
 }
 
 export default function NavItem({
   icon: Icon,
   label,
-  badge,
-  isActive = false,
+  href,
 }: NavItemProps) {
-const userMode = useUserMode()
+const userMode = useUserMode();
+const pathname = usePathname();
+const isActive = pathname === href;
 
   const accentColor =
     userMode.mode === "freelancer"
@@ -33,8 +34,8 @@ const userMode = useUserMode()
         };
 
   return (
-    <a
-      href="#"
+    <Link
+      href={href}
       className={`flex items-center justify-between px-3.5 py-2.5 rounded-lg transition-all group ${
         isActive
           ? `${accentColor.bg} border ${accentColor.border}`
@@ -49,11 +50,7 @@ const userMode = useUserMode()
           {label}
         </span>
       </div>
-      {badge && (
-        <Badge variant="secondary" className="text-xs">
-          {badge}
-        </Badge>
-      )}
-    </a>
+    
+    </Link>
   );
 }

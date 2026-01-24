@@ -23,21 +23,21 @@ export function NavMain() {
 const userMode = useUserMode()
 
   const freelancerMenuItems = [
-    { icon: Home, label: "Dashboard", href: "#", badge: null },
-    { icon: Briefcase, label: "Projects", href: "#", badge: "12" },
-    { icon: Star, label: "Proposals", href: "#", badge: "3" },
-    { icon: TrendingUp, label: "Analytics", href: "#", badge: null },
-    { icon: MessageSquare, label: "Messages", href: "#", badge: "5" },
-    { icon: FileText, label: "Portfolio", href: "#", badge: null },
+    { icon: Home, label: "Dashboard", href: "/dashboard" },
+    { icon: Briefcase, label: "Projects", href: "#"},
+    { icon: Star, label: "Proposals", href: "#"},
+    { icon: TrendingUp, label: "Analytics", href: "#" },
+    { icon: MessageSquare, label: "Messages", href: "#" },
+    { icon: FileText, label: "Portfolio", href: "#" },
   ];
 
   const employerMenuItems = [
-    { icon: Home, label: "Dashboard", href: "#", badge: null },
-    { icon: Briefcase, label: "Posted Jobs", href: "#", badge: "4" },
-    { icon: Users, label: "Freelancers", href: "#", badge: null },
-    { icon: Clock, label: "Active", href: "#", badge: "2" },
-    { icon: MessageSquare, label: "Messages", href: "#", badge: "8" },
-    { icon: TrendingUp, label: "Reports", href: "#", badge: null },
+    { icon: Home, label: "Dashboard", href: "/dashboard" },
+    { icon: Briefcase, label: "Posted Jobs", href: "#" },
+    { icon: Users, label: "Freelancers", href: "#" },
+    { icon: Clock, label: "Active", href: "#" },
+    { icon: MessageSquare, label: "Messages", href: "#" },
+    { icon: TrendingUp, label: "Reports", href: "#" },
   ];
 
   const menuItems =
@@ -55,8 +55,7 @@ const userMode = useUserMode()
               key={item.label}
               icon={item.icon}
               label={item.label}
-              badge={item.badge}
-              isActive={item.label === "Dashboard"}
+              href={item.href}
             />
           ))}
         </SidebarMenu>
