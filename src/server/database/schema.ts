@@ -13,7 +13,7 @@ import {
 import { relations } from "drizzle-orm";
 
 // Enums
-export const userRoleEnum = pgEnum("user_role", [
+export const userModeEnum = pgEnum("user_mode", [
   "freelancer",
   "employer",
   "admin",
@@ -47,7 +47,7 @@ export const users = pgTable(
   {
     id: serial("id").primaryKey(),
     email: text("email").notNull().unique(),
-    role: userRoleEnum("role").notNull(),
+    mode: userModeEnum("mode").notNull(),
     name: text("name"),
     emailVerified: boolean("email_verified").notNull().default(false),
     isActive: boolean("is_active").default(true),

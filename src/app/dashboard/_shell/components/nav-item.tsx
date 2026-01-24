@@ -50,7 +50,6 @@ const isActive = pathname === href;
           {label}
         </span>
       </div>
-    
     </Link>
   );
 }

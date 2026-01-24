@@ -1,5 +1,5 @@
 {
-  "id": "f4d1d076-76ff-4542-ad75-b8ada4a979a5",
+  "id": "b9f6b583-3bcd-4594-8d10-9a7d7bf55639",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1454,9 +1454,9 @@
           "primaryKey": false,
           "notNull": true
         },
-        "role": {
-          "name": "role",
-          "type": "user_role",
+        "mode": {
+          "name": "mode",
+          "type": "user_mode",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
@@ -1618,8 +1618,8 @@
         "withdrawn"
       ]
     },
-    "public.user_role": {
-      "name": "user_role",
+    "public.user_mode": {
+      "name": "user_mode",
       "schema": "public",
       "values": [
         "freelancer",

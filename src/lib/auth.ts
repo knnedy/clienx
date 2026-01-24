@@ -13,7 +13,7 @@ export const auth = betterAuth({
   },
   user: {
     additionalFields: {
-      role: {
+      mode: {
         type: "string",
       },
     },

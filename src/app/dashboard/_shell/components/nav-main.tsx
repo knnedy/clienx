@@ -20,23 +20,23 @@ import {
 import { useUserMode } from "../../providers/user-mode-provider";
 
 export function NavMain() {
-const userMode = useUserMode()
+  const userMode = useUserMode();
 
   const freelancerMenuItems = [
     { icon: Home, label: "Dashboard", href: "/dashboard" },
-    { icon: Briefcase, label: "Projects", href: "#"},
-    { icon: Star, label: "Proposals", href: "#"},
+    { icon: Briefcase, label: "Projects", href: "/dashboard/projects" },
+    { icon: Star, label: "Proposals", href: "/dashboard/proposals" },
     { icon: TrendingUp, label: "Analytics", href: "#" },
-    { icon: MessageSquare, label: "Messages", href: "#" },
+    { icon: MessageSquare, label: "Messages", href: "/dashboard/messages" },
     { icon: FileText, label: "Portfolio", href: "#" },
   ];
 
   const employerMenuItems = [
     { icon: Home, label: "Dashboard", href: "/dashboard" },
-    { icon: Briefcase, label: "Posted Jobs", href: "#" },
-    { icon: Users, label: "Freelancers", href: "#" },
+    { icon: Briefcase, label: "Posted Jobs", href: "/dashboard/jobs" },
+    { icon: Users, label: "Freelancers", href: "/dashboard/freelancers" },
     { icon: Clock, label: "Active", href: "#" },
-    { icon: MessageSquare, label: "Messages", href: "#" },
+    { icon: MessageSquare, label: "Messages", href: "/dashboard/messages" },
     { icon: TrendingUp, label: "Reports", href: "#" },
   ];
 
