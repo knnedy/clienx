@@ -88,7 +88,7 @@ export function NavUser() {
                 signOut({
                   fetchOptions: {
                     onSuccess: () => {
-                      router.replace("/signin");
+                      router.replace("/sign-in");
                     },
                   },
                 });

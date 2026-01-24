@@ -3,19 +3,19 @@
 import { useRouter } from "next/navigation";
 import React, { useContext, useSyncExternalStore } from "react";
 
-
-
 type UserMode = "freelancer" | "employer";
 
 interface UserModeContext {
-    mode: UserMode;
-    setMode: (mode: UserMode) => void;
-    toggleMode: () => void;
-    isFreelancer: boolean;
-    isEmployer: boolean;
+  mode: UserMode;
+  setMode: (mode: UserMode) => void;
+  toggleMode: () => void;
+  isFreelancer: boolean;
+  isEmployer: boolean;
 }
 
-export const UserModeContext = React.createContext<UserModeContext | undefined>(undefined);
+export const UserModeContext = React.createContext<UserModeContext | undefined>(
+  undefined,
+);
 
 interface UserModeProviderProps {
   children: React.ReactNode;
@@ -27,29 +27,30 @@ function createUserModeStore(defaultMode: UserMode) {
   return {
     listeners: new Set<() => void>(),
     defaultMode,
-    
+
     getSnapshot(): UserMode {
       if (typeof window === "undefined") return this.defaultMode;
       const savedMode = localStorage.getItem("userMode") as UserMode | null;
-      return savedMode && (savedMode === "freelancer" || savedMode === "employer")
+      return savedMode &&
+        (savedMode === "freelancer" || savedMode === "employer")
         ? savedMode
         : this.defaultMode;
     },
-    
+
     getServerSnapshot(): UserMode {
       return this.defaultMode;
     },
-    
+
     subscribe(listener: () => void) {
       this.listeners.add(listener);
       return () => this.listeners.delete(listener);
     },
-    
+
     setMode(mode: UserMode) {
       localStorage.setItem("userMode", mode);
       document.cookie = `userMode=${mode}; path=/; max-age=31536000`;
-      this.listeners.forEach(listener => listener());
-    }
+      this.listeners.forEach((listener) => listener());
+    },
   };
 }
 
@@ -58,17 +59,17 @@ export function UserModeProvider({
   defaultMode = "freelancer",
 }: UserModeProviderProps) {
   const router = useRouter();
-  
+
   // Create store with the provided defaultMode
   const store = React.useMemo(
     () => createUserModeStore(defaultMode),
-    [defaultMode]
+    [defaultMode],
   );
-  
+
   const mode = useSyncExternalStore(
     (listener) => store.subscribe(listener),
     () => store.getSnapshot(),
-    () => store.getServerSnapshot()
+    () => store.getServerSnapshot(),
   );
 
   const setMode = (newMode: UserMode) => {

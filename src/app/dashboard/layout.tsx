@@ -13,7 +13,7 @@ export default async function DashboardLayout({
   });
 
   if (!session) {
-    redirect("/signin");
+    redirect("/sign-in");
   }
 
   return <DashboardShell session={session}>{children}</DashboardShell>;

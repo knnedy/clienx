@@ -297,7 +297,7 @@ export default function SignInPage() {
           <p className="text-sm text-center text-muted-foreground mt-8">
             Don&apos;t have an account?{" "}
             <Link
-              href="/signup"
+              href="/sign-up"
               className="text-foreground font-semibold hover:text-cyan-500 transition-colors duration-200">
               Sign up
             </Link>
