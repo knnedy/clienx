@@ -17,14 +17,11 @@ import {
   FileText,
   Clock,
 } from "lucide-react";
+import { useUserMode } from "../../providers/user-mode-provider";
 
-type UserMode = "freelancer" | "employer";
+export function NavMain() {
+const userMode = useUserMode()
 
-type NavMainProps = {
-  userMode: UserMode;
-};
-
-export function NavMain({ userMode }: NavMainProps) {
   const freelancerMenuItems = [
     { icon: Home, label: "Dashboard", href: "#", badge: null },
     { icon: Briefcase, label: "Projects", href: "#", badge: "12" },
@@ -44,7 +41,7 @@ export function NavMain({ userMode }: NavMainProps) {
   ];
 
   const menuItems =
-    userMode === "freelancer" ? freelancerMenuItems : employerMenuItems;
+    userMode.mode === "freelancer" ? freelancerMenuItems : employerMenuItems;
 
   return (
     <SidebarGroup>
@@ -60,7 +57,6 @@ export function NavMain({ userMode }: NavMainProps) {
               label={item.label}
               badge={item.badge}
               isActive={item.label === "Dashboard"}
-              userMode={userMode}
             />
           ))}
         </SidebarMenu>

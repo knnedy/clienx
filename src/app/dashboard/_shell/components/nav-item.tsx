@@ -2,15 +2,13 @@
 
 import type { LucideIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-
-type UserMode = "freelancer" | "employer";
+import { useUserMode } from "../../providers/user-mode-provider";
 
 interface NavItemProps {
   icon: LucideIcon;
   label: string;
   badge?: string | null;
   isActive?: boolean;
-  userMode: UserMode;
 }
 
 export default function NavItem({
@@ -18,10 +16,11 @@ export default function NavItem({
   label,
   badge,
   isActive = false,
-  userMode,
 }: NavItemProps) {
+const userMode = useUserMode()
+
   const accentColor =
-    userMode === "freelancer"
+    userMode.mode === "freelancer"
       ? {
           bg: "bg-cyan-100 dark:bg-cyan-950/40",
           text: "text-cyan-600 dark:text-cyan-400",

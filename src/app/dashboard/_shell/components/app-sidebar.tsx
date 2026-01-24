@@ -15,13 +15,11 @@ import {
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 
-type UserMode = "freelancer" | "employer";
 
-type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
-  userMode: UserMode;
-};
+type AppSidebarProps = React.ComponentProps<typeof Sidebar>
 
-export function AppSidebar({ userMode, ...props }: AppSidebarProps) {
+export function AppSidebar({ ...props }: AppSidebarProps) {
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -59,7 +57,7 @@ export function AppSidebar({ userMode, ...props }: AppSidebarProps) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain userMode={userMode} />
+        <NavMain />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />

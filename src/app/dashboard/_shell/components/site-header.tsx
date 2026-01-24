@@ -12,17 +12,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
+import { useUserMode } from "../../providers/user-mode-provider";
 
-type UserMode = "freelancer" | "employer";
 
-type SiteHeaderProps = {
-  userMode: UserMode;
-  onModeChange: (mode: UserMode) => void;
-};
-
-export function SiteHeader({ userMode, onModeChange }: SiteHeaderProps) {
+export function SiteHeader() {
   const pathname = usePathname();
   const { dynamicTitle } = usePageTitle();
+  const userMode = useUserMode()
 
   const getPageTitle = (path: string) => {
     if (path.startsWith("/dashboard/links")) {
@@ -52,15 +48,15 @@ export function SiteHeader({ userMode, onModeChange }: SiteHeaderProps) {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="gap-2 bg-transparent">
-              {userMode === "freelancer" ? "👨‍💻 Freelancer" : "👔 Employer"}
+              {userMode.mode === "freelancer" ? "👨‍💻 Freelancer" : "👔 Employer"}
               <ChevronDown className="h-4 w-4 opacity-50" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => onModeChange("freelancer")}>
+            <DropdownMenuItem onClick={() => userMode.setMode("freelancer")}>
               👨‍💻 Freelancer Mode
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onModeChange("employer")}>
+            <DropdownMenuItem onClick={() => userMode.setMode("employer")}>
               👔 Employer Mode
             </DropdownMenuItem>
           </DropdownMenuContent>
