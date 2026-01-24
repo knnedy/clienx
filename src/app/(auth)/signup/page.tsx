@@ -41,11 +41,11 @@ const signUpSchema = z.object({
       message:
         "Password must contain at least one uppercase letter, one lowercase letter, and one number",
     }),
-  role: z.enum(["employer", "freelancer"]),
+  mode: z.enum(["employer", "freelancer"]),
 });
 
 export default function SignUpPage() {
-  const [userRole, setUserRole] = useState<"employer" | "freelancer">(
+  const [userMode, setUserMode] = useState<"employer" | "freelancer">(
     "freelancer",
   );
   const [isLoading, setIsLoading] = useState(false);
@@ -59,7 +59,7 @@ export default function SignUpPage() {
       name: "",
       email: "",
       password: "",
-      role: "freelancer",
+      mode: "freelancer",
     },
   });
 
@@ -68,7 +68,7 @@ export default function SignUpPage() {
       name: data.name,
       email: data.email,
       password: data.password,
-      role: userRole,
+      mode: userMode,
       callbackURL: "/dashboard",
       fetchOptions: {
         onRequest: () => {
@@ -129,11 +129,11 @@ export default function SignUpPage() {
   };
 
   const accentColor =
-    userRole === "freelancer"
+    userMode === "freelancer"
       ? "from-cyan-500 to-blue-500"
       : "from-purple-500 to-violet-500";
   const accentColorLight =
-    userRole === "freelancer" ? "text-cyan-600" : "text-purple-600";
+    userMode === "freelancer" ? "text-cyan-600" : "text-purple-600";
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row bg-background">
@@ -159,19 +159,19 @@ export default function SignUpPage() {
         <div className="relative z-10 space-y-8 max-w-md">
           <div>
             <h2 className="text-5xl font-bold tracking-tight leading-tight text-balance">
-              {userRole === "freelancer"
+              {userMode === "freelancer"
                 ? "Your talent deserves recognition"
                 : "Find exceptional talent"}
             </h2>
             <p className="text-white/80 mt-4 text-lg leading-relaxed">
-              {userRole === "freelancer"
+              {userMode === "freelancer"
                 ? "Join thousands of professionals building their dream careers on Clienx."
                 : "Access a global network of skilled professionals ready to bring your vision to life."}
             </p>
           </div>
 
           <div className="space-y-4">
-            {features[userRole].map((feature, i) => (
+            {features[userMode].map((feature, i) => (
               <div key={i} className="flex items-start gap-4 group">
                 <div className="p-3 rounded-xl bg-white/15 group-hover:bg-white/25 transition-colors duration-300">
                   <feature.icon className="w-5 h-5 text-white" />
@@ -213,27 +213,27 @@ export default function SignUpPage() {
               Create an account
             </h2>
             <p className="text-muted-foreground text-lg">
-              Choose your role to get started
+              Choose your mode to get started
             </p>
           </div>
 
           {/* Role selection with improved styling */}
           <div className="mb-8">
             <Tabs
-              value={userRole}
-              onValueChange={(v) => setUserRole(v as "employer" | "freelancer")}
+              value={userMode}
+              onValueChange={(v) => setUserMode(v as "employer" | "freelancer")}
               className="w-full">
               <TabsList className="grid w-full grid-cols-2 h-12 p-1.5 bg-muted/50 border border-border rounded-lg gap-2">
                 <TabsTrigger
                   value="freelancer"
-                  className={`flex items-center justify-center gap-2 font-semibold transition-all duration-300 ${userRole === "freelancer" ? "bg-linear-to-r from-cyan-500/20 to-blue-500/20 text-cyan-700 dark:text-cyan-400 shadow-sm" : ""}`}>
+                  className={`flex items-center justify-center gap-2 font-semibold transition-all duration-300 ${userMode === "freelancer" ? "bg-linear-to-r from-cyan-500/20 to-blue-500/20 text-cyan-700 dark:text-cyan-400 shadow-sm" : ""}`}>
                   <Briefcase className="w-4 h-4" />
                   <span className="hidden sm:inline">Freelancer</span>
                   <span className="sm:hidden">Freelance</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="employer"
-                  className={`flex items-center justify-center gap-2 font-semibold transition-all duration-300 ${userRole === "employer" ? "bg-linear-to-r from-purple-500/20 to-violet-500/20 text-purple-700 dark:text-purple-400 shadow-sm" : ""}`}>
+                  className={`flex items-center justify-center gap-2 font-semibold transition-all duration-300 ${userMode === "employer" ? "bg-linear-to-r from-purple-500/20 to-violet-500/20 text-purple-700 dark:text-purple-400 shadow-sm" : ""}`}>
                   <Users className="w-4 h-4" />
                   <span className="hidden sm:inline">Employer</span>
                   <span className="sm:hidden">Hire</span>
@@ -349,7 +349,7 @@ export default function SignUpPage() {
                 />
               </div>
 
-              {/* Submit button with role-based gradient */}
+              {/* Submit button with mode-based gradient */}
               <Button
                 type="submit"
                 className={`w-full h-11 text-base font-semibold bg-linear-to-r ${accentColor} text-white hover:shadow-lg transition-all duration-300 border-0`}
