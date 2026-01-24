@@ -1,12 +1,13 @@
+"use client";
+
+import FreelancerContent from "./components/freelancer-content";
+import EmployerContent from "./components/employer-content";
+import { useUserMode } from "./providers/user-mode-provider";
+
 export default function Dashboard() {
+  const { mode } = useUserMode();
+
   return (
-    <>
-      <div className="rounded-lg border p-6">
-        <h1 className="text-3xl font-bold">Welcome to your Dashboard</h1>
-        <p className="mt-2 text-gray-600">
-          Select an option from the sidebar to get started.
-        </p>
-      </div>
-    </>
+    <>{mode === "freelancer" ? <FreelancerContent /> : <EmployerContent />}</>
   );
 }

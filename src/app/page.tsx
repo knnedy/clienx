@@ -34,7 +34,7 @@ export default function Home() {
               Sign In
             </Link>
             <Link
-              href="/sign-up"
+              href="/dashboard"
               className="px-4 py-2 text-xs font-medium bg-linear-to-r from-cyan-600 to-blue-600 dark:from-cyan-500 dark:to-blue-500 text-white rounded-md hover:shadow-md transition-all hover:scale-105">
               Get Started
             </Link>
